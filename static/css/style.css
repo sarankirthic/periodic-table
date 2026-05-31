@@ -1,0 +1,285 @@
+/* ============================================================
+   Periodic Table — vintage laminated-chart recreation
+   Cell template mirrors element.svg (53.5 × 80 unit cell)
+   ============================================================ */
+
+:root{
+  /* base cell width; everything else scales from it */
+  --cw: 84px;
+  --ch: calc(var(--cw) * 80 / 53.5);   /* keep template aspect ratio */
+  --gap: 3px;
+
+  /* fixed accent colours lifted straight from element.svg */
+  --pink:  #f56182;   /* atomic-number badge      */
+  --teal:  #86c1c1;   /* crystal ionic radius box */
+  --yellow:#ffe799;   /* ionisation potential box */
+  --green: #9fd0b3;   /* element-name band        */
+  --ink:   #1a1622;
+
+  --paper: #efe9dd;   /* aged-paper backdrop */
+  --paper2:#e4dccb;
+}
+
+/* ---- category colours (muted, vintage purples + relatives) ---- */
+.cat-alkali     { --c: #d7a9c4; }
+.cat-alkaline   { --c: #c9aed6; }
+.cat-transition { --c: #9e93b5; }   /* the template purple */
+.cat-post       { --c: #93a6c9; }
+.cat-metalloid  { --c: #8fc0b6; }
+.cat-nonmetal   { --c: #aecb9c; }
+.cat-halogen    { --c: #e0c089; }
+.cat-noble      { --c: #d49ca0; }
+.cat-lanthanide { --c: #b5a3d4; }
+.cat-actinide   { --c: #cda6c8; }
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{ height:100%; }
+body{
+  font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+  background:
+    radial-gradient(120% 120% at 50% -10%, #6b4a32 0%, #4d3322 45%, #3a2618 100%);
+  color:var(--ink);
+  min-height:100vh;
+  padding:26px 22px 60px;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------------- masthead ---------------- */
+.masthead{
+  max-width:1500px; margin:0 auto 22px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+  gap:30px; flex-wrap:wrap;
+  color:#f3ead9;
+}
+.masthead h1{
+  font-weight:800; letter-spacing:-.02em; line-height:.92;
+  font-size:clamp(28px,4.2vw,52px);
+  text-transform:uppercase;
+  display:flex; flex-direction:column;
+}
+.masthead h1 span{
+  font-size:.34em; font-weight:500; letter-spacing:.42em;
+  color:#d8b78c; margin-top:.5em; padding-left:.1em;
+}
+.mast-sub{
+  margin-top:10px; font-size:13px; letter-spacing:.04em;
+  color:#cbb597;
+}
+
+/* ---------------- legend ---------------- */
+.legend-key{
+  display:grid; grid-template-columns:repeat(2,auto); gap:5px 16px;
+  background:rgba(20,12,6,.32); backdrop-filter:blur(2px);
+  border:1px solid rgba(216,183,140,.25);
+  padding:12px 16px; border-radius:8px;
+}
+.lk{ display:flex; align-items:center; gap:8px; font-size:11.5px; color:#ecdfc8; letter-spacing:.02em; white-space:nowrap; }
+.lk i{ width:14px; height:14px; border-radius:3px; border:1px solid rgba(0,0,0,.35); background:var(--c); flex:none; }
+
+/* ---------------- stage / scaling ---------------- */
+.stage{ display:flex; justify-content:center; }
+.table-scaler{
+  position:relative;
+  transform-origin:top center;
+  display:grid;
+  grid-template-columns:repeat(18, var(--cw));
+  grid-auto-rows:var(--ch);
+  gap:var(--gap);
+  padding-top:0;
+}
+.ptable{ display:contents; }
+
+/* the lanthanide/actinide series sit on their own two rows below a gap */
+.table-scaler{ grid-template-rows:repeat(7,var(--ch)) calc(var(--ch)*.5) repeat(2,var(--ch)); }
+
+/* ============================================================
+   ELEMENT CELL — zone map from element.svg (unit 53.5 × 80)
+   ============================================================ */
+.cell{
+  position:relative;
+  width:var(--cw); height:var(--ch);
+  background:var(--c);
+  border:.5px solid rgba(0,0,0,.55);
+  border-radius:2px;
+  cursor:pointer;
+  overflow:hidden;
+  box-shadow:0 1px 0 rgba(0,0,0,.25);
+  font-variant-numeric:tabular-nums;
+  transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+.cell:hover{
+  transform:translateY(-3px) scale(1.04);
+  box-shadow:0 8px 22px rgba(0,0,0,.55);
+  z-index:5;
+  filter:saturate(1.15);
+}
+
+/* upper white zone (holds symbol + the 5 right-hand data fields) — 0→50% */
+.cell .upper{
+  position:absolute; left:.4%; top:.3%; width:99%; height:49.7%;
+  background:#fbf8f1;
+}
+/* symbol-zone gets a soft category tint so families read at a glance */
+.cell .upper::after{
+  content:""; position:absolute; left:0; top:30.5%;
+  width:56%; height:69.5%;
+  background:color-mix(in srgb, var(--c) 42%, #fff);
+}
+
+/* pink atomic-number badge — x0.2 y0.2 w15 h12 */
+.cell .znum{
+  position:absolute; left:.4%; top:.3%; width:28%; height:15%;
+  background:var(--pink); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:calc(var(--cw)*.135); letter-spacing:-.02em;
+  border-bottom-right-radius:2px; z-index:3;
+}
+
+/* big symbol — left zone x0.2 y12.2 w29.8 h27.5 */
+.cell .sym{
+  position:absolute; left:0; top:15%; width:56%; height:35%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:calc(var(--cw)*.40); letter-spacing:-.03em;
+  color:var(--ink); z-index:2; line-height:1;
+}
+
+/* five stacked right-hand fields, x23.2(=≈43%) ... each 10% tall */
+.cell .rcol{
+  position:absolute; right:1.5%; top:0; width:55%; height:50%;
+  display:flex; flex-direction:column;
+  z-index:2; text-align:right;
+}
+.cell .rcol .rf{
+  flex:1; display:flex; align-items:center; justify-content:flex-end;
+  font-size:calc(var(--cw)*.092); line-height:1; color:#2a2230;
+  padding-right:1px; white-space:nowrap;
+}
+.cell .rcol .rf.mass{ font-weight:700; font-size:calc(var(--cw)*.10); }
+
+/* teal ionic-radius box + yellow ionisation box — y40→49 (50%→61.25%) */
+.cell .midrow{
+  position:absolute; left:0; top:50%; width:100%; height:11.25%;
+  display:flex;
+}
+.cell .midrow .ionic{
+  width:57%; background:var(--teal); border-top:.5px solid rgba(0,0,0,.4);
+}
+.cell .midrow .ionis{
+  width:43%; background:var(--yellow); border-top:.5px solid rgba(0,0,0,.4);
+  border-left:.5px solid rgba(0,0,0,.4);
+}
+.cell .midrow span{
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  font-size:calc(var(--cw)*.092); color:#231c16; line-height:1;
+}
+
+/* oxidation-states band — y49.5→61 */
+.cell .ox{
+  position:absolute; left:0; top:61.25%; width:100%; height:14.4%;
+  background:color-mix(in srgb, var(--c) 78%, #2a2336);
+  display:flex; align-items:center; justify-content:center;
+  border-top:.5px solid rgba(0,0,0,.4);
+  font-size:calc(var(--cw)*.10); font-weight:600; color:#fff; line-height:1;
+}
+/* electron-config band — y61→71 */
+.cell .cfg{
+  position:absolute; left:0; top:75.6%; width:100%; height:12.5%;
+  background:color-mix(in srgb, var(--c) 62%, #fff);
+  display:flex; align-items:center; justify-content:center;
+  border-top:.5px solid rgba(0,0,0,.35);
+  font-size:calc(var(--cw)*.088); color:#211b2a; line-height:1; white-space:nowrap;
+}
+/* name band — y71→80 */
+.cell .nm{
+  position:absolute; left:0; bottom:0; width:100%; height:11.25%;
+  background:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  border-top:.5px solid rgba(0,0,0,.4);
+  font-size:calc(var(--cw)*.082); font-weight:700; letter-spacing:.01em;
+  text-transform:uppercase; color:#1b2a20; line-height:1;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 2px;
+}
+
+/* placeholder cell for the 57-71 / 89-103 ranges in the main grid */
+.placeholder{
+  position:relative; width:var(--cw); height:var(--ch);
+  border:.5px dashed rgba(255,255,255,.5);
+  border-radius:2px;
+  background:repeating-linear-gradient(135deg, rgba(255,255,255,.08) 0 6px, rgba(255,255,255,.02) 6px 12px);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:#f3ead9; text-align:center; gap:3px; line-height:1.15;
+}
+.placeholder b{ font-size:calc(var(--cw)*.13); }
+.placeholder span{ font-size:calc(var(--cw)*.10); letter-spacing:.04em; text-transform:uppercase; opacity:.85; }
+
+/* group-number column headers handled by grid row 0 spacing — small tabs */
+.series-labels{ display:contents; }
+.series-tag{
+  align-self:center; justify-self:start;
+  color:#e9d9bd; font-size:11px; letter-spacing:.05em;
+  text-transform:uppercase; transform:translateX(calc(var(--cw)*1.05));
+  pointer-events:none;
+}
+
+/* ---------------- reference key cell ---------------- */
+.keycell-wrap{
+  grid-column:4 / span 6; grid-row:1 / span 3;
+  display:flex; gap:18px; align-items:center;
+  color:#f0e6d3; padding:6px 4px;
+}
+.keycell-wrap .kc-note{ font-size:11.5px; line-height:1.55; max-width:340px; color:#e6d6ba; }
+.keycell-wrap .kc-note h4{ font-size:13px; letter-spacing:.06em; text-transform:uppercase; color:#d8b78c; margin-bottom:7px; }
+.keycell-wrap .kc-note ul{ list-style:none; display:grid; gap:3px; }
+.keycell-wrap .kc-note li{ display:flex; gap:7px; align-items:baseline; }
+.keycell-wrap .kc-note li b{ color:#fbf8f1; font-weight:600; min-width:120px; display:inline-block; }
+.kc-cell{ flex:none; --cw:118px; }
+
+/* ============================================================
+   HOVER POPUP WINDOW
+   ============================================================ */
+.popup{
+  position:fixed; z-index:50; pointer-events:none;
+  opacity:0; transform:translateY(6px) scale(.98);
+  transition:opacity .14s ease, transform .14s ease;
+  max-width:520px;
+}
+.popup.show{ opacity:1; transform:translateY(0) scale(1); }
+.popup-inner{
+  display:flex; gap:0;
+  background:#fbf8f1;
+  border:1px solid #2a2118;
+  border-radius:10px;
+  box-shadow:0 26px 70px rgba(0,0,0,.6), 0 0 0 6px rgba(40,28,16,.35);
+  overflow:hidden;
+}
+.popup-cell{ --cw:158px; flex:none; padding:16px; background:#efe9dd; border-right:1px solid #d6cdba;
+  display:flex; align-items:center; }
+.popup-detail{ padding:16px 18px 18px; width:300px; }
+
+.pd-cat{
+  display:inline-flex; align-items:center; gap:7px;
+  font-size:11px; letter-spacing:.08em; text-transform:uppercase; font-weight:700;
+  padding:4px 10px; border-radius:20px; color:#1c1622;
+  background:var(--c); margin-bottom:10px;
+}
+.pd-name{ font-size:26px; font-weight:800; letter-spacing:-.02em; line-height:1; }
+.pd-sub{ font-size:12px; color:#6f6553; margin-top:3px; letter-spacing:.03em; }
+.pd-stats{
+  margin-top:13px; display:grid; grid-template-columns:1fr 1fr; gap:1px;
+  background:#ddd4c1; border:1px solid #ddd4c1; border-radius:6px; overflow:hidden;
+}
+.pd-stat{ background:#fbf8f1; padding:6px 9px; }
+.pd-stat .l{ font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:#9a8e76; }
+.pd-stat .v{ font-size:13.5px; font-weight:700; color:#241d2c; margin-top:1px; }
+.pd-stat.full{ grid-column:1 / -1; }
+.pd-feat{
+  margin-top:13px; font-size:12.5px; line-height:1.55; color:#3b3326;
+  border-top:1px dashed #cdc3ae; padding-top:11px;
+}
+.pd-feat b{ color:#241d2c; }
+
+/* ---------------- responsive note ---------------- */
+@media (max-width:760px){
+  .masthead{ justify-content:center; text-align:center; }
+}
