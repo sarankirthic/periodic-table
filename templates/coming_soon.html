@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }}</title>
+<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/atom-logo.svg') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="/" {% if request.path == '/' %}aria-current="page"{% endif %}>Periodic Table</a>
+    <a href="/organic" {% if request.path == '/organic' %}aria-current="page"{% endif %}>Organic Chemistry</a>
+    <a href="/inorganic" {% if request.path == '/inorganic' %}aria-current="page"{% endif %}>Inorganic Chemistry</a>
+    <a href="/physical" {% if request.path == '/physical' %}aria-current="page"{% endif %}>Physical Chemistry</a>
+  </nav>
+  <div class="coming-soon">
+    <p class="cs-label">Coming Soon</p>
+    <h1>{{ title }}</h1>
+    <p class="cs-joke">&ldquo;{{ joke }}&rdquo;</p>
+  </div>
+</body>
+</html>

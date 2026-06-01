@@ -8,6 +8,12 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+  <nav class="topnav">
+    <a href="/" {% if request.path == '/' %}aria-current="page"{% endif %}>Periodic Table</a>
+    <a href="/organic" {% if request.path == '/organic' %}aria-current="page"{% endif %}>Organic Chemistry</a>
+    <a href="/inorganic" {% if request.path == '/inorganic' %}aria-current="page"{% endif %}>Inorganic Chemistry</a>
+    <a href="/physical" {% if request.path == '/physical' %}aria-current="page"{% endif %}>Physical Chemistry</a>
+  </nav>
   <header class="masthead">
     <div class="mast-left">
       <h1>Periodic Table<span>of Elements</span></h1>
