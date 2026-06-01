@@ -111,6 +111,35 @@
   const popupDetail = document.getElementById("popupDetail");
   let cursor = {x:0,y:0};
 
+  const imgCache = new Map();
+
+  function fetchElementImage(e) {
+    const slot = document.getElementById('pd-img-' + e.z);
+    if (!slot) return;
+    if (imgCache.has(e.z)) {
+      const url = imgCache.get(e.z);
+      if (url) renderImage(slot, url);
+      return;
+    }
+    fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(e.name))
+      .then(r => r.json())
+      .then(data => {
+        const url = (data.thumbnail || data.originalimage || {}).source || null;
+        imgCache.set(e.z, url);
+        const current = document.getElementById('pd-img-' + e.z);
+        if (url && current) renderImage(current, url);
+      })
+      .catch(() => imgCache.set(e.z, null));
+  }
+
+  function renderImage(slot, url) {
+    const img = document.createElement('img');
+    img.alt = '';
+    img.onload = () => slot.classList.add('loaded');
+    img.src = url;
+    slot.appendChild(img);
+  }
+
   function showPopup(e, srcEl){
     popupCell.className = "popup-cell cat-"+e.cat;
     popupCell.innerHTML = `<div class="cell cat-${e.cat}">${cellInner(e)}</div>`;
@@ -119,6 +148,7 @@
     popup.classList.add("show");
     popup.setAttribute("aria-hidden","false");
     positionPopup();
+    fetchElementImage(e);
   }
   function hidePopup(){
     popup.classList.remove("show");
@@ -147,6 +177,7 @@
       <div class="pd-cat">${CAT_LABELS[e.cat]}</div>
       <div class="pd-name">${e.name}</div>
       <div class="pd-sub">${e.sym} &middot; atomic number ${e.z} &middot; group ${groups[e.x]||"&mdash;"} &middot; period ${e.y<=7?e.y:(e.y===8?6:7)}</div>
+      <div class="pd-img" id="pd-img-${e.z}"></div>
       <div class="pd-stats">
         ${stat("Atomic mass", e.mass)}
         ${stat("Electronegativity", e.en?e.en:"&mdash;")}

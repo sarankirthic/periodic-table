@@ -209,3 +209,4 @@ __marimo__/
 .idea/
 .lean-ctx
 .claude
+*.DS_Store

@@ -37,8 +37,8 @@
 html,body{ height:100%; }
 body{
   font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
-  background:
-    radial-gradient(120% 120% at 50% -10%, #6b4a32 0%, #4d3322 45%, #3a2618 100%);
+  /* fallback solid = gradient's end color */
+  background: #3a2618 radial-gradient(140% 100% at 50% 0%, #6b4a32 0%, #4d3322 55%, #3a2618 100%) fixed;
   color:var(--ink);
   min-height:100vh;
   padding:26px 22px 60px;
@@ -47,7 +47,7 @@ body{
 
 /* ---------------- masthead ---------------- */
 .masthead{
-  max-width:1500px; margin:0 auto 22px;
+  max-width:1563px; margin:0 auto 22px;
   display:flex; justify-content:space-between; align-items:flex-end;
   gap:30px; flex-wrap:wrap;
   color:#f3ead9;
@@ -59,7 +59,7 @@ body{
   display:flex; flex-direction:column;
 }
 .masthead h1 span{
-  font-size:.34em; font-weight:500; letter-spacing:.42em;
+  font-size:.34em; font-weight:500; letter-spacing:.25em;
   color:#d8b78c; margin-top:.5em; padding-left:.1em;
 }
 .mast-sub{
@@ -78,7 +78,7 @@ body{
 .lk i{ width:14px; height:14px; border-radius:3px; border:1px solid rgba(0,0,0,.35); background:var(--c); flex:none; }
 
 /* ---------------- stage / scaling ---------------- */
-.stage{ display:flex; justify-content:center; }
+.stage{ display:flex; justify-content:center; height: 150%}
 .table-scaler{
   position:relative;
   transform-origin:top center;
@@ -138,10 +138,11 @@ body{
 
 /* big symbol — left zone x0.2 y12.2 w29.8 h27.5 */
 .cell .sym{
-  position:absolute; left:0; top:15%; width:56%; height:35%;
+  position:absolute; left:0; top:15%; width:50%; height:35%;
   display:flex; align-items:center; justify-content:center;
-  font-weight:800; font-size:calc(var(--cw)*.40); letter-spacing:-.03em;
+  font-weight:550; font-size:calc(var(--cw)*.35); letter-spacing:-.03em;
   color:var(--ink); z-index:2; line-height:1;
+  padding-left: 5%; padding-right:1%;
 }
 
 /* five stacked right-hand fields, x23.2(=≈43%) ... each 10% tall */
@@ -178,17 +179,18 @@ body{
 .cell .ox{
   position:absolute; left:0; top:61.25%; width:100%; height:14.4%;
   background:color-mix(in srgb, var(--c) 78%, #2a2336);
-  display:flex; align-items:center; justify-content:center;
+  display:flex; align-items:center; justify-content:right;
   border-top:.5px solid rgba(0,0,0,.4);
-  font-size:calc(var(--cw)*.10); font-weight:600; color:#fff; line-height:1;
+  font-size:calc(var(--cw)*.15); font-weight:600; color:#fff; line-height:1;
 }
 /* electron-config band — y61→71 */
 .cell .cfg{
   position:absolute; left:0; top:75.6%; width:100%; height:12.5%;
   background:color-mix(in srgb, var(--c) 62%, #fff);
-  display:flex; align-items:center; justify-content:center;
+  display:flex; align-items:center; justify-content:right;
   border-top:.5px solid rgba(0,0,0,.35);
-  font-size:calc(var(--cw)*.088); color:#211b2a; line-height:1; white-space:nowrap;
+  font-size:calc(var(--cw)*.13); color:#211b2a; line-height:1; white-space:nowrap;
+  padding-right: 2px;
 }
 /* name band — y71→80 */
 .cell .nm{
@@ -224,7 +226,7 @@ body{
 
 /* ---------------- reference key cell ---------------- */
 .keycell-wrap{
-  grid-column:4 / span 6; grid-row:1 / span 3;
+  grid-column:5 / span 9; grid-row:1 / span 3;
   display:flex; gap:18px; align-items:center;
   color:#f0e6d3; padding:6px 4px;
 }
@@ -233,7 +235,7 @@ body{
 .keycell-wrap .kc-note ul{ list-style:none; display:grid; gap:3px; }
 .keycell-wrap .kc-note li{ display:flex; gap:7px; align-items:baseline; }
 .keycell-wrap .kc-note li b{ color:#fbf8f1; font-weight:600; min-width:120px; display:inline-block; }
-.kc-cell{ flex:none; --cw:118px; }
+.kc-cell{ flex:none; --cw:168px; --ch:212px;pointer-events: none;}
 
 /* ============================================================
    HOVER POPUP WINDOW
@@ -253,7 +255,7 @@ body{
   box-shadow:0 26px 70px rgba(0,0,0,.6), 0 0 0 6px rgba(40,28,16,.35);
   overflow:hidden;
 }
-.popup-cell{ --cw:158px; flex:none; padding:16px; background:#efe9dd; border-right:1px solid #d6cdba;
+.popup-cell{ --cw:158px; --ch: 212px;flex:none; padding:16px; background:#efe9dd; border-right:1px solid #d6cdba;
   display:flex; align-items:center; }
 .popup-detail{ padding:16px 18px 18px; width:300px; }
 
@@ -265,6 +267,16 @@ body{
 }
 .pd-name{ font-size:26px; font-weight:800; letter-spacing:-.02em; line-height:1; }
 .pd-sub{ font-size:12px; color:#6f6553; margin-top:3px; letter-spacing:.03em; }
+.pd-img{
+  margin-top:11px; border-radius:7px; overflow:hidden;
+  max-height:0; transition:max-height .35s ease;
+}
+.pd-img.loaded{ max-height:160px; }
+.pd-img img{
+  width:100%; height:160px; object-fit:cover; display:block;
+  opacity:0; transition:opacity .25s ease .05s;
+}
+.pd-img.loaded img{ opacity:1; }
 .pd-stats{
   margin-top:13px; display:grid; grid-template-columns:1fr 1fr; gap:1px;
   background:#ddd4c1; border:1px solid #ddd4c1; border-radius:6px; overflow:hidden;
