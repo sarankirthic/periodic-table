@@ -91,7 +91,20 @@ body{
 .ptable{ display:contents; }
 
 /* the lanthanide/actinide series sit on their own two rows below a gap */
-.table-scaler{ grid-template-rows:repeat(7,var(--ch)) calc(var(--ch)*.5) repeat(2,var(--ch)); }
+.table-scaler{ grid-template-rows:calc(var(--ch)*.20) calc(var(--ch)*.20) repeat(7,var(--ch)) calc(var(--ch)*.5) repeat(2,var(--ch)); }
+
+/* column number / group name header rows */
+.col-num{
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:rgba(255,255,255,.8);
+  background: #201640;
+}
+.col-grp{
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; color:rgba(0,0,0,1);
+  letter-spacing:.06em; text-transform:uppercase;
+  background: #E8E1FA;
+}
 
 /* ============================================================
    ELEMENT CELL — zone map from element.svg (unit 53.5 × 80)
@@ -226,7 +239,7 @@ body{
 
 /* ---------------- reference key cell ---------------- */
 .keycell-wrap{
-  grid-column:5 / span 9; grid-row:1 / span 3;
+  grid-column:5 / span 9; grid-row:3 / span 3;
   display:flex; gap:18px; align-items:center;
   color:#f0e6d3; padding:6px 4px;
 }
@@ -235,7 +248,7 @@ body{
 .keycell-wrap .kc-note ul{ list-style:none; display:grid; gap:3px; }
 .keycell-wrap .kc-note li{ display:flex; gap:7px; align-items:baseline; }
 .keycell-wrap .kc-note li b{ color:#fbf8f1; font-weight:600; min-width:120px; display:inline-block; }
-.kc-cell{ flex:none; --cw:168px; --ch:212px;pointer-events: none;}
+.kc-cell{ flex:none; --cw:168px; --ch:230px;pointer-events: none;}
 
 /* ============================================================
    HOVER POPUP WINDOW

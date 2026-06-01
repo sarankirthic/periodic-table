@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Spinning atom logo">
+  <defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f86d6"></stop>
+      <stop offset="1" stop-color="#0a4f9e"></stop>
+    </linearGradient>
+    <radialGradient id="protonGrad" cx="35%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#ff6d7d"></stop>
+      <stop offset="1" stop-color="#d62236"></stop>
+    </radialGradient>
+    <radialGradient id="neutronGrad" cx="35%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#6fd38a"></stop>
+      <stop offset="1" stop-color="#2e9e4f"></stop>
+    </radialGradient>
+    <radialGradient id="elGrad" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#3f93e4"></stop>
+      <stop offset="1" stop-color="#08376f"></stop>
+    </radialGradient>
+    
+  </defs>
+
+  
+  <g fill="none" stroke="url(#ringGrad)" stroke-width="4" stroke-linecap="round">
+    <ellipse cx="100" cy="100" rx="88" ry="33" transform="rotate(0 100 100)"></ellipse>
+    <ellipse cx="100" cy="100" rx="88" ry="33" transform="rotate(60 100 100)"></ellipse>
+    <ellipse cx="100" cy="100" rx="88" ry="33" transform="rotate(120 100 100)"></ellipse>
+  </g>
+
+  
+  <g>
+    <circle cx="100" cy="100" r="20" fill="#ffffff" opacity="0.55"></circle>
+    <circle cx="93" cy="94" r="8.5" fill="url(#neutronGrad)"></circle>
+    <circle cx="108" cy="95" r="8.5" fill="url(#protonGrad)"></circle>
+    <circle cx="100" cy="103" r="8.5" fill="url(#protonGrad)"></circle>
+    <circle cx="91" cy="107" r="8.5" fill="url(#protonGrad)"></circle>
+    <circle cx="109" cy="108" r="8.5" fill="url(#neutronGrad)"></circle>
+    <circle cx="100" cy="92" r="8.5" fill="url(#neutronGrad)"></circle>
+  </g>
+
+  
+  <g transform="rotate(0 100 100)"><circle r="8" fill="url(#elGrad)" stroke="#ffffff" stroke-width="1.8" cx="188" cy="100"></circle></g>
+  <g transform="rotate(60 100 100)"><circle r="8" fill="url(#elGrad)" stroke="#ffffff" stroke-width="1.8" cx="12" cy="100"></circle></g>
+  <g transform="rotate(120 100 100)"><circle r="8" fill="url(#elGrad)" stroke="#ffffff" stroke-width="1.8" cx="188" cy="100"></circle></g>
+</svg>

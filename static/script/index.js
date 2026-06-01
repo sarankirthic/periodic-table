@@ -36,7 +36,7 @@
   function fmt(v){ return (v===""||v==null) ? "&mdash;" : v; }
 
   /* ---------- grid row for an element (f-block drops to 9/10) ---------- */
-  function gridRow(e){ return e.y<=7 ? e.y : (e.y===8?9:10); }
+  function gridRow(e){ return e.y<=7 ? e.y+2 : (e.y===8?11:12); }
 
   /* ---------- render all cells ---------- */
   const ptable = document.getElementById("ptable");
@@ -60,22 +60,49 @@
     p.innerHTML=`<b>${a}&ndash;${b}</b><span>${label}</span>`;
     ptable.appendChild(p);
   }
-  placeholder(3,6,57,71,"Lanthanides");
-  placeholder(3,7,89,103,"Actinides");
+  placeholder(3,8,57,71,"Lanthanides");
+  placeholder(3,9,89,103,"Actinides");
 
   /* ---------- series labels at the start of the f-block rows ---------- */
-  function seriesLabel(row,txt){
+  function seriesLabel(row,txt,color){
     const s=document.createElement("div");
-    s.style.gridColumn="1 / span 2"; s.style.gridRow=row;
-    s.style.alignSelf="center"; s.style.color="#e9d9bd";
-    s.style.fontSize="12px"; s.style.letterSpacing=".05em";
+    s.style.gridColumn="1 / span 3"; s.style.gridRow=row;
+    s.style.alignSelf="center"; s.style.color="#000000";
+    s.style.fontSize="8px"; s.style.letterSpacing=".05em";
     s.style.textTransform="uppercase"; s.style.textAlign="center";
-    s.style.lineHeight="1.3";
+    s.style.lineHeight="1.3"; s.style.background=color
     s.innerHTML=txt;
+    let height = 84 * 80 /53.5;
+    s.style.height = `${height}px`;
+    s.style.display = "flex";
+    s.style.alignItems = "center";
+    s.style.justifyContent = "center";
+    s.style.gridRow = `${row} / span 1`;
+    s.style.minHeight = `${height}px`;
+    s.style.maxHeight = `${height}px`;
     ptable.appendChild(s);
   }
-  seriesLabel(9,"Lanthanide<br>series");
-  seriesLabel(10,"Actinide<br>series");
+  seriesLabel(11,"Lanthanide<br>series", "#b5a3d4");
+  seriesLabel(12,"Actinide<br>series", "#cda6c8");
+
+  /* ---------- column number + group name header rows ---------- */
+  const GROUP_NAMES = ["IA","IIA","IIIB","IVB","VB","VIB","VIIB","VIII","VIII","VIII","IB","IIB","IIIA","IVA","VA","VIA","VIIA","0"];
+  for (let col = 1; col <= 18; col++) {
+    const num = document.createElement("div");
+    num.className = "col-num";
+    num.style.gridColumn = col;
+    num.style.gridRow = 1;
+    num.textContent = col;
+    ptable.appendChild(num);
+
+    if (col === 9 || col === 10) continue;
+    const grp = document.createElement("div");
+    grp.className = "col-grp";
+    grp.style.gridColumn = col === 8 ? "8 / span 3" : col;
+    grp.style.gridRow = 2;
+    grp.textContent = GROUP_NAMES[col-1];
+    ptable.appendChild(grp);
+  }
 
   /* ---------- legend ---------- */
   const lk = document.getElementById("legendKey");
@@ -92,14 +119,21 @@
   kc.innerHTML = `
     <div class="cell cat-${mn.cat} kc-cell">${cellInner(mn)}</div>
     <div class="kc-note">
-      <h4>How to read a cell</h4>
       <ul>
-        <li><b>Atomic number</b> pink badge, top-left</li>
-        <li><b>Right column</b> mass &middot; melting &middot; boiling &middot; electronegativity &middot; density</li>
-        <li><b>Teal box</b> crystal ionic radius (&Aring;)</li>
-        <li><b>Yellow box</b> ionisation potential (eV)</li>
-        <li><b>Purple bands</b> oxidation states &middot; electron config</li>
-        <li><b>Green band</b> element name</li>
+        <li><b>Relative atomic mass</b></li>
+        <li><b>Melting point</b></li>
+        <li><b>Boiling point</b></li>
+        <li><b>Electronegativity (Allred, Rochow)</b></li>
+        <li><b>Density, 20&deg;C</b></li>
+        <li><b>Crystal Ionic Radius, A (Principal valency-state)</b></li>
+        <li><b>Ionisation Potential eV, (I-Spectra)</b></li>
+        <li><b>Oxidation states</b></li>
+        <li><b>Electron Configuration</b></li>
+<!--        <li><b>Right column</b> mass &middot; melting &middot; boiling &middot; electronegativity &middot; density</li>-->
+<!--        <li><b>Teal box</b> crystal ionic radius (&Aring;)</li>-->
+<!--        <li><b>Yellow box</b> ionisation potential (eV)</li>-->
+<!--        <li><b>Purple bands</b> oxidation states &middot; electron config</li>-->
+<!--        <li><b>Green band</b> element name</li>-->
       </ul>
     </div>`;
 
