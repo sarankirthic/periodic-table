@@ -210,3 +210,4 @@ __marimo__/
 .lean-ctx
 .claude
 *.DS_Store
+.vercel
